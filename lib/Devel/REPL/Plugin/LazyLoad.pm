@@ -73,14 +73,67 @@ sub BEFORE_PLUGIN {
 
 __END__
 
-# ABSTRACT:  A short description of Devel::REPL::Plugin::LazyLoad
+# ABSTRACT: Lazily load packages into your REPL
 
 =head1 SYNOPSIS
 
+  # repl.rc
+  $_REPL->load_plugin('LazyLoad');
+  $_REPL->lazy_load('File::Slurp' => qw/read_file write_file/); # for
+                                                                # Exporter-style
+                                                                # modules
+  $_REPL->lazy_load('DateTime'); # for OO-style modules
+
 =head1 DESCRIPTION
 
-=head1 FUNCTIONS
+This plugin for L<Devel::REPL> allows you to lazily load certain modules into
+your REPL as you use them.  Let's say you end up using L<DateTime> math in
+your REPL 50% of the time.  Put the following into your C<repl.rc>:
+
+  $_REPL->load_plugin('LazyLoad');
+  $_REPL->lazy_load('DateTime');
+
+Now, the first time you use L<DateTime>, it will be loaded, and you shouldn't
+notice a difference, apart from the loading time.  If you never use
+L<DateTime> in a REPL session, it never gets loaded.
+
+=head1 METHODS
+
+=head2 $_REPL->lazy_load($module)
+
+=head2 $_REPL->lazy_load($module, @import_list)
+
+Tells the REPL to lazily load a module.  If no import list is specified,
+C<$module> is treated as an "OO-style" module (ex. DateTime, where you
+call methods on the class rather than use exported functions).  If an
+import list is specified, each function in the import list is created in the
+current package and will load C<$module> when invoked.
+
+=head1 LIMITATIONS
+
+=over 4
+
+=item *
+
+C<my $class = 'DateTime'; $class-E<gt>new> will not work.
+
+=item *
+
+C<DateTime::-E<gt>new> will not work.
+
+=item *
+
+Exported symbols that are not specified in the call to import will
+not work.
+
+=item *
+
+Prototypes for exported functions may be messed up until they are actually imported into the REPL.
+
+=back
 
 =head1 SEE ALSO
+
+L<Devel::REPL>
 
 =cut
