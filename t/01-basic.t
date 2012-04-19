@@ -3,7 +3,8 @@ use warnings;
 use lib 't/lib';
 
 use Devel::REPL;
-use Test::More tests => 8;
+use Test::More tests => 9;
+use Test::NoWarnings;
 
 NO_LAZY_LOADING: {
     my $repl = Devel::REPL->new;

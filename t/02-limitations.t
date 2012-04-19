@@ -3,7 +3,8 @@ use warnings;
 use lib 't/lib';
 
 use Devel::REPL;
-use Test::More tests => 2;
+use Test::More tests => 3;
+use Test::NoWarnings;
 
 CLASS_IN_VARIABLE: {
     my $repl = Devel::REPL->new;
