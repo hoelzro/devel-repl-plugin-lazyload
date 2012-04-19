@@ -7,7 +7,7 @@ use Test::More tests => 9;
 use Test::NoWarnings;
 
 NO_LAZY_LOADING: {
-    my $repl = Devel::REPL->new;
+    my $repl = Devel::REPL->new( term => {} );
 
     my ( $result ) = $repl->eval('OOModule->frobnicate');
     isa_ok $result, 'Devel::REPL::Error';
@@ -17,7 +17,7 @@ NO_LAZY_LOADING: {
 }
 
 LAZY_LOAD_PLUGIN_NO_LAZY_LOADING: {
-    my $repl = Devel::REPL->new;
+    my $repl = Devel::REPL->new( term => {} );
     $repl->load_plugin('LazyLoad');
 
     my ( $result ) = $repl->eval('OOModule->frobnicate');
@@ -28,7 +28,7 @@ LAZY_LOAD_PLUGIN_NO_LAZY_LOADING: {
 }
 
 LAZY_LOAD_OO_MODULE: {
-    my $repl = Devel::REPL->new;
+    my $repl = Devel::REPL->new( term => {} );
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load('OOModule');
 
@@ -40,7 +40,7 @@ LAZY_LOAD_OO_MODULE: {
 }
 
 LAZY_LOAD_FUNC_MODULE: {
-    my $repl = Devel::REPL->new;
+    my $repl = Devel::REPL->new( term => {} );
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load('OOModule');
     $repl->lazy_load(ExportingModule => qw{foo_bar});

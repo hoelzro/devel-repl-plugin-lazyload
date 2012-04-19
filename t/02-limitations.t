@@ -7,7 +7,7 @@ use Test::More tests => 3;
 use Test::NoWarnings;
 
 CLASS_IN_VARIABLE: {
-    my $repl = Devel::REPL->new;
+    my $repl = Devel::REPL->new( term => {} );
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load('OOModule');
 
@@ -16,7 +16,7 @@ CLASS_IN_VARIABLE: {
 }
 
 FULL_PACKAGE_NAME: {
-    my $repl = Devel::REPL->new;
+    my $repl = Devel::REPL->new( term => {} );
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load('OOModule');
 
