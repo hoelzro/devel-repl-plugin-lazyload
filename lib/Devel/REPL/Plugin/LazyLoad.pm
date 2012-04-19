@@ -27,7 +27,7 @@ sub _lazy_load_exporter {
 
         *{$glob} = sub {
             my $functions = 'qw{' . join(' ', @functions) . '}';
-            eval "package $package; require $module; no warnings 'redefine'; $module->import($functions);";
+            eval "package $package; require $module; local \$SIG{__WARN__} = sub {}; $module->import($functions);";
             goto &{$package . '::' . $function};
         };
     }
