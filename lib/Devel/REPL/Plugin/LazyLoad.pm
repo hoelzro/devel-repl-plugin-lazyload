@@ -19,7 +19,7 @@ sub _lazy_load_exporter {
     my $package = $self->current_package;
 
     foreach my $function (@functions) {
-        no strict 'refs';
+        no strict 'refs'; ## no critic (ProhibitNoStrict)
 
         my $glob = \*{$package . '::' . $function};
 
@@ -52,7 +52,7 @@ sub _lazy_load_oo {
     $module_path    =~ s{::}{/}g;
     $module_path   .= '.pm';
 
-    no strict 'refs';
+    no strict 'refs'; ## no critic (ProhibitNoStrict)
     my $glob = \*{$package . '::' . $fn_name};
     return if *{$glob}{'CODE'};
 
