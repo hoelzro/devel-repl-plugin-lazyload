@@ -3,7 +3,6 @@ use warnings;
 use lib 't/lib';
 
 use Devel::REPL;
-use Test::Exception;
 use Test::More tests => 8;
 
 NO_LAZY_LOADING: {
