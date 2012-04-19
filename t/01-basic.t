@@ -3,7 +3,7 @@ use warnings;
 use lib 't/lib';
 
 use Devel::REPL;
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Test::NoWarnings;
 
 NO_LAZY_LOADING: {
@@ -50,4 +50,13 @@ LAZY_LOAD_FUNC_MODULE: {
 
     ( $result ) = $repl->eval('foo_bar()');
     is $result, 18;
+}
+
+LAZY_LOAD_MULTI_LEVEL_OO_PACKAGE: {
+    my $repl = Devel::REPL->new( term => {} );
+    $repl->load_plugin('LazyLoad');
+    $repl->lazy_load('OOModule::Nested::Package');
+
+    my ( $result ) = $repl->eval('OOModule::Nested::Package->invoke');
+    is $result, 19;
 }
