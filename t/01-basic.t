@@ -3,7 +3,7 @@ use warnings;
 use lib 't/lib';
 
 use Devel::REPL;
-use Test::More tests => 10;
+use Test::More tests => 12;
 use Test::NoWarnings;
 
 NO_LAZY_LOADING: {
@@ -59,4 +59,16 @@ LAZY_LOAD_MULTI_LEVEL_OO_PACKAGE: {
 
     my ( $result ) = $repl->eval('OOModule::Nested::Package->invoke');
     is $result, 19;
+}
+
+LAZY_LOAD_NEW_SYMBOLS_OLD_MODULE: {
+    my $repl = Devel::REPL->new( term => {} );
+    $repl->load_plugin('LazyLoad');
+    $repl->eval('use ExportingModule2 qw(foo)');
+    my ( $result ) = $repl->eval('bar()');
+    isa_ok $result, 'Devel::REPL::Error';
+    $repl->lazy_load('ExportingModule2' => qw{foo bar});
+
+    ( $result ) = $repl->eval('bar()');
+    is $result, 'called bar';
 }
