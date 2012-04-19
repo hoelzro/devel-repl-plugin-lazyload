@@ -21,7 +21,11 @@ sub _lazy_load_exporter {
     foreach my $function (@functions) {
         no strict 'refs';
 
-        *{$package . '::' . $function} = sub {
+        my $glob = \*{$package . '::' . $function};
+
+        next if *{$glob}{'CODE'};
+
+        *{$glob} = sub {
             my $functions = 'qw{' . join(' ', @functions) . '}';
             eval "package $package; require $module; no warnings 'redefine'; $module->import($functions);";
             goto &{$package . '::' . $function};
@@ -47,7 +51,10 @@ sub _lazy_load_oo {
     $module_path   .= '.pm';
 
     no strict 'refs';
-    *{$package . '::' . $fn_name} = sub {
+    my $glob = \*{$package . '::' . $fn_name};
+    return if *{$glob}{'CODE'};
+
+    *{$glob} = sub {
         require $module_path;
         return $module;
     };
