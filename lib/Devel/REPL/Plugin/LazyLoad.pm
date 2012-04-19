@@ -63,13 +63,6 @@ sub _lazy_load_oo {
 sub lazy_load {
     my ( $self, $module, @functions ) = @_;
 
-    my $path = $module;
-
-    $path  =~ s{::}{/}g;
-    $path .= '.pm';
-
-    return if $INC{$path};
-
     if(@functions) {
         $self->_lazy_load_exporter($module, @functions);
     } else {
