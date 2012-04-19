@@ -143,4 +143,14 @@ Prototypes for exported functions may be messed up until they are actually impor
 
 L<Devel::REPL>
 
+=begin comment
+
+=over
+
+=item BEFORE_PLUGIN
+
+=back
+
+=end comment
+
 =cut
