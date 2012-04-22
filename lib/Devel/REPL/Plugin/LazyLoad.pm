@@ -28,7 +28,7 @@ sub _lazy_load_exporter {
         *{$glob} = sub {
             my $functions = 'qw{' . join(' ', @functions) . '}';
             ## no critic (ProhibitStringyEval)
-            eval "package $package; require $module; local \$SIG{__WARN__} = sub {}; $module->import($functions);";
+            eval "package $package; require $module; local \$^W; $module->import($functions);";
             ## use critic (ProhibitStringyEval)
             goto &{$package . '::' . $function};
         };
