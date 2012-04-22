@@ -3,7 +3,7 @@ use warnings;
 use lib 't/lib';
 
 use Devel::REPL;
-use Test::More tests => 7;
+use Test::More tests => 9;
 use Test::NoWarnings;
 
 NONEXISTENT_MODULE: {
@@ -13,6 +13,13 @@ NONEXISTENT_MODULE: {
     $repl->lazy_load('IDontExist2' => qw{foo bar});
 
     my ( $result ) = $repl->eval('IDontExist->new');
+    isa_ok $result, 'Devel::REPL::Error';
+
+    ( $result ) = $repl->eval('foo()');
+    isa_ok $result, 'Devel::REPL::Error';
+
+    # do it again, in case something funky happens the second time around
+    ( $result ) = $repl->eval('IDontExist->new');
     isa_ok $result, 'Devel::REPL::Error';
 
     ( $result ) = $repl->eval('foo()');
