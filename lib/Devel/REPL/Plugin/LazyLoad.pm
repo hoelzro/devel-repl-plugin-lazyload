@@ -25,12 +25,17 @@ sub _lazy_load_exporter {
 
         next if *{$glob}{'CODE'};
 
-        *{$glob} = sub {
+        my $this_func;
+        *{$glob} = $this_func = sub {
             my $functions = 'qw{' . join(' ', @functions) . '}';
             ## no critic (ProhibitStringyEval)
             my $ok = eval "package $package; require $module; local \$^W; $module->import($functions); 1";
             unless($ok) {
                 croak $@;
+            }
+
+            if(\&{$package . '::' . $function} == $this_func) {
+                croak "$package did not export the '$function' function";
             }
             ## use critic (ProhibitStringyEval)
             goto &{$package . '::' . $function};
