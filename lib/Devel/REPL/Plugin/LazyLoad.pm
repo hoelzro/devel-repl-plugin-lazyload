@@ -30,7 +30,7 @@ sub _lazy_load_exporter {
             ## no critic (ProhibitStringyEval)
             my $ok = eval "package $package; require $module; local \$^W; $module->import($functions); 1";
             unless($ok) {
-                die $@;
+                croak $@;
             }
             ## use critic (ProhibitStringyEval)
             goto &{$package . '::' . $function};
