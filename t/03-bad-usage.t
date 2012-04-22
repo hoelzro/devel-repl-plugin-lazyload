@@ -2,12 +2,13 @@ use strict;
 use warnings;
 use lib 't/lib';
 
-use Devel::REPL;
+use REPLTest;
 use Test::More tests => 9;
 use Test::NoWarnings;
 
-NONEXISTENT_MODULE: {
-    my $repl = Devel::REPL->new( term => {} );
+NONEXISTENT_MODULE:
+test_repl {
+    my ( $repl ) = @_;
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load('IDontExist');
     $repl->lazy_load('IDontExist2' => qw{foo bar});
@@ -24,10 +25,11 @@ NONEXISTENT_MODULE: {
 
     ( $result ) = $repl->eval('foo()');
     isa_ok $result, 'Devel::REPL::Error';
-}
+};
 
-BAD_MODULE: {
-    my $repl = Devel::REPL->new( term => {} );
+BAD_MODULE:
+test_repl {
+    my ( $repl ) = @_;
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load('BadOOModule');
     $repl->lazy_load('BadExporterModule' => qw{foo bar});
@@ -37,22 +39,24 @@ BAD_MODULE: {
 
     ( $result ) = $repl->eval('foo()');
     isa_ok $result, 'Devel::REPL::Error';
-}
+};
 
-BAD_EXPORT_SYMBOL: {
-    my $repl = Devel::REPL->new( term => {} );
+BAD_EXPORT_SYMBOL:
+test_repl {
+    my ( $repl ) = @_;
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load(ExportingModule => qw{baz});
 
     my ( $result ) = $repl->eval('baz()');
     isa_ok $result, 'Devel::REPL::Error';
-}
+};
 
-BAD_CUSTOM_EXPORTER: {
-    my $repl = Devel::REPL->new( term => {} );
+BAD_CUSTOM_EXPORTER:
+test_repl {
+    my ( $repl ) = @_;
     $repl->load_plugin('LazyLoad');
     $repl->lazy_load(BadCustomExporter => qw{quux});
 
     my ( $result ) = $repl->eval('quux()');
     isa_ok $result, 'Devel::REPL::Error';
-}
+};
