@@ -3,7 +3,7 @@ use warnings;
 use lib 't/lib';
 
 use Devel::REPL;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Test::NoWarnings;
 
 NONEXISTENT_MODULE: {
@@ -38,5 +38,14 @@ BAD_EXPORT_SYMBOL: {
     $repl->lazy_load(ExportingModule => qw{baz});
 
     my ( $result ) = $repl->eval('baz()');
+    isa_ok $result, 'Devel::REPL::Error';
+}
+
+BAD_CUSTOM_EXPORTER: {
+    my $repl = Devel::REPL->new( term => {} );
+    $repl->load_plugin('LazyLoad');
+    $repl->lazy_load(BadCustomExporter => qw{quux});
+
+    my ( $result ) = $repl->eval('quux()');
     isa_ok $result, 'Devel::REPL::Error';
 }
